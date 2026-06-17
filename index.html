@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Enterprise AI Duty Scheduler V4 - Advanced Employee Scheduling System">
+    <title>Enterprise AI Duty Scheduler V4</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span class="logo-text">Enterprise AI Duty Scheduler</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <nav class="main-nav">
+                    <button class="nav-btn active" data-view="schedule">Schedule</button>
+                    <button class="nav-btn" data-view="employees">Employees</button>
+                    <button class="nav-btn" data-view="requests">Requests</button>
+                    <button class="nav-btn" data-view="dashboard">Dashboard</button>
+                    <button class="nav-btn" data-view="settings">Settings</button>
+                </nav>
+            </div>
+            <div class="header-right">
+                <button class="icon-btn" id="theme-toggle" title="Toggle Dark Mode">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <button class="icon-btn" id="backup-btn" title="Backup & Restore">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 16 16 12 12 8"></polyline>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                </button>
+                <button class="icon-btn" id="export-btn" title="Export to Excel">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                </button>
+                <button class="icon-btn" id="undo-btn" title="Undo" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 7v6h6"></path>
+                        <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn" id="redo-btn" title="Redo" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 7v6h-6"></path>
+                        <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- Schedule View -->
+            <div class="view-container active" data-view="schedule">
+                <div class="schedule-toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn-primary" id="ai-generate-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path>
+                            </svg>
+                            AI Generate Schedule
+                        </button>
+                        <button class="btn btn-secondary" id="auto-balance-btn">Auto Rebalance</button>
+                    </div>
+                    <div class="toolbar-center">
+                        <div class="month-selector">
+                            <button class="btn-icon" id="prev-month">‹</button>
+                            <select id="month-selector">
+                                <option value="0">January</option>
+                                <option value="1">February</option>
+                                <option value="2">March</option>
+                                <option value="3">April</option>
+                                <option value="4">May</option>
+                                <option value="5">June</option>
+                                <option value="6">July</option>
+                                <option value="7">August</option>
+                                <option value="8">September</option>
+                                <option value="9">October</option>
+                                <option value="10">November</option>
+                                <option value="11">December</option>
+                            </select>
+                            <select id="year-selector"></select>
+                            <button class="btn-icon" id="next-month">›</button>
+                        </div>
+                    </div>
+                    <div class="toolbar-right">
+                        <div class="search-box">
+                            <input type="text" id="employee-search" placeholder="Search employees...">
+                        </div>
+                        <button class="btn-icon" id="view-mode-toggle" title="Toggle View Mode">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="8" y1="6" x2="21" y2="6"></line>
+                                <line x1="8" y1="12" x2="21" y2="12"></line>
+                                <line x1="8" y1="18" x2="21" y2="18"></line>
+                                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="schedule-container">
+                    <div class="schedule-wrapper" id="schedule-wrapper">
+                        <table class="schedule-table" id="schedule-table">
+                            <thead>
+                                <tr class="header-row">
+                                    <th class="employee-header-cell">Employee</th>
+                                    <td class="date-header-cell" colspan="1"></td>
+                                </tr>
+                            </thead>
+                            <tbody id="schedule-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Schedule Legend -->
+                <div class="schedule-legend">
+                    <div class="legend-group">
+                        <span class="legend-item"><span class="shift-badge morning">M</span> Morning</span>
+                        <span class="legend-item"><span class="shift-badge evening">E</span> Evening</span>
+                        <span class="legend-item"><span class="shift-badge night">N</span> Night</span>
+                        <span class="legend-item"><span class="shift-badge off">OFF</span> Off</span>
+                        <span class="legend-item"><span class="shift-badge al">AL</span> Annual Leave</span>
+                        <span class="legend-item"><span class="shift-badge cl">CL</span> Casual Leave</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employees View -->
+            <div class="view-container" data-view="employees">
+                <div class="employees-toolbar">
+                    <button class="btn btn-primary" id="add-employee-btn">+ Add Employee</button>
+                    <div class="search-box">
+                        <input type="text" id="employees-search" placeholder="Search employees...">
+                    </div>
+                </div>
+
+                <div class="employees-grid" id="employees-grid">
+                </div>
+            </div>
+
+            <!-- Requests View -->
+            <div class="view-container" data-view="requests">
+                <div class="requests-toolbar">
+                    <button class="btn btn-primary" id="add-request-btn">+ Add Request</button>
+                    <select id="request-filter">
+                        <option value="all">All Requests</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+
+                <div class="requests-list" id="requests-list">
+                </div>
+            </div>
+
+            <!-- Dashboard View -->
+            <div class="view-container" data-view="dashboard">
+                <div class="dashboard-grid">
+                    <!-- Key Metrics -->
+                    <div class="dashboard-section full-width">
+                        <h2>Key Performance Indicators</h2>
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-label">Fairness Score</div>
+                                <div class="metric-value" id="metric-fairness">-</div>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" id="fairness-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Coverage Score</div>
+                                <div class="metric-value" id="metric-coverage">-</div>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" id="coverage-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Fatigue Score</div>
+                                <div class="metric-value" id="metric-fatigue">-</div>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" id="fatigue-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Weekend Balance</div>
+                                <div class="metric-value" id="metric-weekend">-</div>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" id="weekend-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Night Balance</div>
+                                <div class="metric-value" id="metric-night">-</div>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" id="night-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="dashboard-section">
+                        <h2>Shift Distribution</h2>
+                        <canvas id="shift-chart"></canvas>
+                    </div>
+
+                    <div class="dashboard-section">
+                        <h2>Employee Workload</h2>
+                        <canvas id="workload-chart"></canvas>
+                    </div>
+
+                    <!-- Warnings -->
+                    <div class="dashboard-section full-width">
+                        <h2>Scheduling Alerts</h2>
+                        <div class="warnings-list" id="warnings-list">
+                        </div>
+                    </div>
+
+                    <!-- Employee Stats -->
+                    <div class="dashboard-section full-width">
+                        <h2>Employee Statistics</h2>
+                        <div class="stats-table-container">
+                            <table class="stats-table" id="stats-table">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Morning</th>
+                                        <th>Evening</th>
+                                        <th>Night</th>
+                                        <th>OFF</th>
+                                        <th>AL</th>
+                                        <th>CL</th>
+                                        <th>Consecutive Nights</th>
+                                        <th>Double Weekends</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stats-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div class="view-container" data-view="settings">
+                <div class="settings-grid">
+                    <div class="settings-section">
+                        <h2>General Settings</h2>
+                        <div class="setting-group">
+                            <label>Default Month:</label>
+                            <select id="setting-default-month">
+                                <option value="current">Current Month</option>
+                                <option value="next">Next Month</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label>Auto Save Interval (seconds):</label>
+                            <input type="number" id="setting-autosave" min="10" max="300" value="30">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2>Scheduling Rules</h2>
+                        <div class="setting-group">
+                            <label>Min Coverage Per Shift (%):</label>
+                            <input type="number" id="setting-min-coverage" min="0" max="100" value="60">
+                        </div>
+                        <div class="setting-group">
+                            <label>Max Consecutive Night Shifts:</label>
+                            <input type="number" id="setting-max-consecutive-nights" min="1" max="7" value="3">
+                        </div>
+                        <div class="setting-group">
+                            <label>Max Night Shifts Per Week:</label>
+                            <input type="number" id="setting-max-night-per-week" min="1" max="7" value="3">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2>AI Engine Settings</h2>
+                        <div class="setting-group">
+                            <label>Simulations to Run:</label>
+                            <input type="number" id="setting-simulations" min="100" max="10000" value="1000">
+                        </div>
+                        <div class="setting-group">
+                            <label>Fairness Weight (%):</label>
+                            <input type="number" id="setting-weight-fairness" min="0" max="100" value="30">
+                        </div>
+                        <div class="setting-group">
+                            <label>Coverage Weight (%):</label>
+                            <input type="number" id="setting-weight-coverage" min="0" max="100" value="30">
+                        </div>
+                        <div class="setting-group">
+                            <label>Fatigue Weight (%):</label>
+                            <input type="number" id="setting-weight-fatigue" min="0" max="100" value="25">
+                        </div>
+                        <div class="setting-group">
+                            <label>Balance Weight (%):</label>
+                            <input type="number" id="setting-weight-balance" min="0" max="100" value="15">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2>Data Management</h2>
+                        <button class="btn btn-secondary" id="clear-cache-btn">Clear Cache</button>
+                        <button class="btn btn-secondary" id="export-settings-btn">Export Settings</button>
+                        <button class="btn btn-secondary" id="import-settings-btn">Import Settings</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="modal-overlay"></div>
+
+    <!-- Employee Modal -->
+    <div class="modal" id="employee-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="employee-modal-title">Add Employee</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Employee ID</label>
+                    <input type="text" id="emp-id" placeholder="E.g., EMP001">
+                </div>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="emp-name" placeholder="Full name">
+                </div>
+                <div class="form-group">
+                    <label>Position</label>
+                    <input type="text" id="emp-position" placeholder="Job title">
+                </div>
+                <div class="form-group">
+                    <label>Available Shifts</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="emp-shift-morning" checked> Morning</label>
+                        <label><input type="checkbox" id="emp-shift-evening" checked> Evening</label>
+                        <label><input type="checkbox" id="emp-shift-night" checked> Night</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Annual Leave Balance</label>
+                    <input type="number" id="emp-al-balance" min="0" value="20">
+                </div>
+                <div class="form-group">
+                    <label>Casual Leave Balance</label>
+                    <input type="number" id="emp-cl-balance" min="0" value="8">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="emp-status">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="on_leave">On Leave</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="emp-locked"> Lock Employee (No scheduling changes)</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="employee-modal-cancel">Cancel</button>
+                <button class="btn btn-primary" id="employee-modal-save">Save Employee</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Modal -->
+    <div class="modal" id="request-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Employee Request</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Employee</label>
+                    <select id="req-employee">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Request Type</label>
+                    <select id="req-type">
+                        <option value="shift_preference">Shift Preference</option>
+                        <option value="day_off">Day Off Request</option>
+                        <option value="annual_leave">Annual Leave</option>
+                        <option value="casual_leave">Casual Leave</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" id="req-start-date">
+                </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <input type="date" id="req-end-date">
+                </div>
+                <div class="form-group">
+                    <label>Details</label>
+                    <textarea id="req-details" placeholder="Additional details..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="req-status">
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="request-modal-cancel">Cancel</button>
+                <button class="btn btn-primary" id="request-modal-save">Save Request</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cell Edit Modal -->
+    <div class="modal" id="cell-edit-modal">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h2>Edit Shift</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Employee: <span id="cell-emp-name"></span></label>
+                    <label>Date: <span id="cell-date"></span></label>
+                </div>
+                <div class="form-group">
+                    <label>Shift Type</label>
+                    <div class="button-group">
+                        <button class="btn-toggle" data-shift="M">Morning (M)</button>
+                        <button class="btn-toggle" data-shift="E">Evening (E)</button>
+                        <button class="btn-toggle" data-shift="N">Night (N)</button>
+                        <button class="btn-toggle" data-shift="OFF">Off (OFF)</button>
+                        <button class="btn-toggle" data-shift="AL">Annual Leave (AL)</button>
+                        <button class="btn-toggle" data-shift="CL">Casual Leave (CL)</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="cell-lock"> Lock Cell</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cell-edit-cancel">Cancel</button>
+                <button class="btn btn-primary" id="cell-edit-save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Backup Modal -->
+    <div class="modal" id="backup-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Backup & Restore</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="backup-section">
+                    <h3>Create Backup</h3>
+                    <p>Download all data as a JSON file</p>
+                    <button class="btn btn-primary" id="create-backup-btn">Create Backup</button>
+                </div>
+                <div class="backup-section">
+                    <h3>Restore from Backup</h3>
+                    <p>Upload a previously saved JSON file</p>
+                    <input type="file" id="restore-file" accept=".json">
+                    <button class="btn btn-secondary" id="restore-backup-btn">Restore Backup</button>
+                </div>
+                <div class="backup-section">
+                    <h3>Auto Backup History</h3>
+                    <div id="backup-history">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="backup-modal-close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Simulation Modal -->
+    <div class="modal" id="ai-simulation-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>AI Schedule Generation</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="simulation-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="simulation-progress"></div>
+                    </div>
+                    <div class="progress-text" id="simulation-text">Initializing...</div>
+                </div>
+
+                <div class="simulation-results" id="simulation-results" style="display: none;">
+                    <h3>Top 5 Schedules</h3>
+                    <div class="results-list" id="results-list">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="ai-simulation-cancel">Cancel</button>
+                <button class="btn btn-primary" id="ai-simulation-apply" disabled>Apply Best Schedule</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-content" id="toast-content"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
